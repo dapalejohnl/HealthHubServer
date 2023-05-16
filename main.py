@@ -2,10 +2,10 @@ import data_processing as dp
 
 if __name__ == '__main__':
     # Initialize parser object for each xml dataset.
-    jeff_parser = dp.ProcessData("export_nguyen.xml")
-    feiyang_parser =  dp.ProcessData("export_feiyang.xml")
-    john_parser = dp.ProcessData("export_johnL.xml")
-    kaylie_parser = dp.ProcessData("export_kaylie.xml")
+    jeff_parser = dp.ProcessData("export_nguyen.xml", "jeff1")
+    feiyang_parser =  dp.ProcessData("export_feiyang.xml", "feiyang1")
+    john_parser = dp.ProcessData("export_johnL.xml", "john1")
+    kaylie_parser = dp.ProcessData("export_kaylie.xml", "kaylie1")
 
     # Parse the file and store a tree root.
     jeff_parser.parse_file()
@@ -33,6 +33,8 @@ if __name__ == '__main__':
     jeff_record_types = jeff_parser.get_record_types()
 
     for type in jeff_record_types:
-        jeff_parser.get_type_values(type)
+        #jeff_parser.get_type_values(type)
+        print("Creating shelve for type:", type)
+        jeff_parser.create_type_shelf(type)
 
     # jeff_parser.get_type_values('HKQuantityTypeIdentifierStepCount')

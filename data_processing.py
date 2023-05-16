@@ -1,9 +1,11 @@
 from lxml import etree
+import shelve
 
 class ProcessData:
-    def __init__(self, path) :
+    def __init__(self, path, user_id) :
         """Class constructor."""
         self.file_path = path    # This is the class variable representing the title we're interestsed in.
+        self.user_id = user_id
         self.parsed_root = None  # Class variable representing the parsed xml object.
 
     def parse_file(self):
@@ -54,14 +56,18 @@ class ProcessData:
 
     def create_type_shelf(self, record_type):
         # Go through every record
-        for record in self.parsed_root.iter('Record'):
-            record_dict = dict()
+        with shelve.open("shelves/" + record_type) as record_shelve:
+            new_list = []
+            for record in self.parsed_root.iter('Record'):
+                record_dict = dict()
 
-            # When the record is of the preferred type, we will extract the values.
-            if (record.get('type') == record_type):
-                # This gets ONE of the events.
-                for child in record:
-                    record_dict[child.tag] = child.text
-                
-                # Put into python shelves here
-                
+                # When the record is of the preferred type, we will extract the values.
+                if (record.get('type') == record_type):
+                    # This gets ONE of the events.
+                    for child in record:
+                        record_dict[child.tag] = child.text
+                    
+                    # Put into python shelves here
+                    print(record_dict)
+                    new_list.append(record_dict)
+            record_shelve[self.user_id] = new_list
