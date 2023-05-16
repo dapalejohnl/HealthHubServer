@@ -50,3 +50,18 @@ class ProcessData:
                 if (record.get('type') == record_type):
                     value_arr = record.attrib.values()
                     f.write(' '.join(value_arr) + '\n')
+
+
+    def create_type_shelf(self, record_type):
+        # Go through every record
+        for record in self.parsed_root.iter('Record'):
+            record_dict = dict()
+
+            # When the record is of the preferred type, we will extract the values.
+            if (record.get('type') == record_type):
+                # This gets ONE of the events.
+                for child in record:
+                    record_dict[child.tag] = child.text
+                
+                # Put into python shelves here
+                
