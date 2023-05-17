@@ -63,6 +63,5 @@ class ProcessData:
                 if (record.get('type') == record_type):
                     
                     # Put into python shelves here
-                    print(record.attrib)
-                    new_list.append(record.attrib)
+                    new_list.append(dict(record.attrib))
             record_shelve[self.user_id] = new_list
