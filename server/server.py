@@ -13,7 +13,6 @@ import tornado.gen as gen
 import os
 import math
 import re
-
 import data_processing as dp
 
 session = requests.Session()
