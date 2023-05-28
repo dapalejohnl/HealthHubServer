@@ -1,4 +1,4 @@
-import data_processing as dp
+import data_process.data_processing as dp
 
 if __name__ == '__main__':
     # Initialize parser object for each xml dataset.
@@ -9,9 +9,9 @@ if __name__ == '__main__':
 
     # Parse the file and store a tree root.
     jeff_parser.parse_file()
-    # feiyang_parser.parse_file()
-    # john_parser.parse_file()
-    # kaylie_parser.parse_file()
+    feiyang_parser.parse_file()
+    john_parser.parse_file()
+    kaylie_parser.parse_file()
 
     """
     # Get the full context of attributes associated to each type of record stored by the data. 
@@ -31,10 +31,28 @@ if __name__ == '__main__':
     """
 
     jeff_record_types = jeff_parser.get_record_types()
+    feiyang_record_types = feiyang_parser.get_record_types()
+    john_record_types = john_parser.get_record_types()
+    kaylie_record_types = kaylie_parser.get_record_types()
 
-    for type in jeff_record_types:
-        #jeff_parser.get_type_values(type)
-        print("Creating shelve for type:", type)
-        jeff_parser.create_type_shelf(type)
+    # for type in jeff_record_types:
+    kaylie_parser.get_type_values('HKQuantityTypeIdentifierHeight')
+    kaylie_parser.get_type_values('HKQuantityTypeIdentifierBodyMass')
 
-    # jeff_parser.get_type_values('HKQuantityTypeIdentifierStepCount')
+
+    # for type in feiyang_record_types:
+    #     feiyang_parser.get_type_values(type)
+
+    # for type in john_record_types:
+    #     john_parser.get_type_values(type)
+
+    # for type in kaylie_record_types:
+    #     kaylie_parser.get_type_values(type)
+
+    # for type in jeff_record_types:
+    #     print("Creating shelve for type:", type)
+    #     jeff_parser.create_type_shelf(type)
+
+    # for type in feiyang_record_types:
+    #     print("Creating shelve for type:", type)
+    #     feiyang_parser.create_type_shelf(type)

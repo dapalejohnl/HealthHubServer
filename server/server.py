@@ -1,3 +1,8 @@
+# Extend the path.
+import sys
+sys.path.append("..")
+
+# Other import statements
 from threading import Thread
 import random
 import collections
@@ -13,7 +18,7 @@ import tornado.gen as gen
 import os
 import math
 import re
-import data_processing as dp
+import data_process.data_processing as dp
 
 session = requests.Session()
 
