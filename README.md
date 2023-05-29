@@ -25,20 +25,39 @@ All APIs have their own error codes, in ADDITION to these error codes that apply
 ```
 101: internal error
 102: no user id (user id not passed as a header)
-103: user not authorized
-104: incorrect request type (example: GET request when POST request expected)
-105: incorrect data input
+103: incorrect request type (example: GET request when POST request expected)
+104: incorrect data input
 ```
 
-## **User Settings APIs**
+## **User APIs**
 
-### /settings/get [GET]
+### /users/create [POST]
+Attempts to create a new user by username and returns the UID if created
+```
+Expected data:
+{
+	username: "aaaa"
+	password: "password123"
+}
+Returned data:
+{
+	status: {success: True, errorCode: 0},
+	"userUID": "aaaa"
+}
+```
+#### Call-specific error codes
+```
+0: None, successful
+1: User id already exists
+```
+
+### /users/settings/get [GET]
 Attempts to get the list of built-in settings for a user
 ```
 Expected data: NONE
 Returned data:
 {
-	status: {success = True, errorCode = 0},
+	status: {success: True, errorCode: 0},
 	settings: {
 		"sex": "f",
 		"weight": 130,
@@ -66,7 +85,7 @@ Returned data:
 }
 ```
 
-### /settings/change [POST]
+### /users/settings/edit [POST]
 Attempts to change any built-in setting
 ```
 Expected data:
@@ -76,10 +95,7 @@ Expected data:
 }
 Returned data:
 {
-	status: {success = True, errorCode = 0},
-	name: "Plaza Verde Group A",
-	userUIDs: [UID1, UID2, UID3],
-	propertyUIDs: [UID1, UID2, UID3]
+	status: {success: True, errorCode: 0}
 }
 ```
 #### Call-specific error codes
@@ -97,10 +113,10 @@ Attempts to get the next exercise recommendation
 Expected data: NONE
 Returned data:
 {
-	status: {success = True, errorCode = 0},
+	status: {success: True, errorCode: 0},
 	plan: [
-		{exercise = "swimming", duration = 3600},
-		{exercise = "running", duration = 1800},
+		{exercise: "swimming", duration: 3600},
+		{exercise: "running", duration: 1800},
 	]
 }
 ```
@@ -110,11 +126,11 @@ Attempts to get the next meal recommendation
 Expected data: NONE
 Returned data:
 {
-	status: {success = True, errorCode = 0},
+	status: {success: True, errorCode: 0},
 	plan: [
-		{meal = "banana", calories = 400},
-		{meal = "fruits", calories = 400},
-		{meal = "pasta", calories = 800},
+		{meal: "banana", calories: 400},
+		{meal: "fruits", calories: 400},
+		{meal: "pasta", calories: 800},
 	]
 }
 ```
@@ -124,9 +140,9 @@ Attempts to get the next sleep recommendation
 Expected data: NONE
 Returned data:
 {
-	status: {success = True, errorCode = 0},
+	status: {success: True, errorCode: 0},
 	plan: [
-		{sleepStart = 1685170800, sleepEnd = 1685199600, duration = 28800},
+		{sleepStart: 1685170800, sleepEnd: 1685199600, duration: 28800},
 	]
 }
 ```
