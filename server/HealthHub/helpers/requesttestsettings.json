@@ -1,0 +1,10 @@
+{
+	"url": "http://127.0.0.1:8000",
+	"endpoint": "users/create",
+	"requestMethod": "POST",
+	"sessionId": "",
+	"data": {
+        "email": "testemail@uci.edu",
+		"password": "password123"
+	}
+}

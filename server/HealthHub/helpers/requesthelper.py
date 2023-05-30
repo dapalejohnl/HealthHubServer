@@ -1,27 +1,35 @@
-from users.models import User
+from users.models import User, Session
 from django.utils import timezone
 
 session_expiration = 2592000 #30 day session expiration
 
 class RequestChecker():
-	def checkRequest(request, userUIDRequired=True, method="GET"):
+	def checkRequest(request, session=True, method="GET"):
 		#Check request information
 		if request.method != method:
 			return 104
 		
 		#Check session / account information
-		user_id = None
-		if userUIDRequired:
+		session_id = None
+		if session:
 			try:
-				user_id = request.headers["user-id"]
+				session_id = request.headers["session-id"]
 			except:
 				return 102
-			# Now we can get the user with this user id
-			user_object = None
+			
+			# Now we can get the user with this session id
+			session_object = None
 			try:
-				user_object = User.objects.get(userUID=user_id)
+				session_object = Session.objects.get(sessionUID=session_id)
 			except:
-				user_object = None
-			if not user_object:
+				session_object = None
+			if session_object:
+				#Check if session is still valid
+				current_time = timezone.now().timestamp()
+				created_time = session_object.createdTime
+				if current_time > created_time + session_expiration:
+					session_object.delete()
+					return 105
+			else:
 				return 102
 		return 0

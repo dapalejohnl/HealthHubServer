@@ -15,7 +15,7 @@ and then press enter to see what is returned! If you get a response, it should s
 # Backend APIs
 - All APIs besides the first two account endpoints should have the session id as a header:
 ```
-["user-id"] = "abacca-1313a"
+["session-id"] = "abacca-1313a"
 ```
 
 - All APIs are expecting input and output to be in encoded json
@@ -24,33 +24,62 @@ and then press enter to see what is returned! If you get a response, it should s
 All APIs have their own error codes, in ADDITION to these error codes that apply to all of them:
 ```
 101: internal error
-102: no user id (user id not passed as a header)
-103: incorrect request type (example: GET request when POST request expected)
-104: incorrect data input
+102: no session id (not logged in / session id not passed as a header)
+103: user not authorized
+104: incorrect request type (example: GET request when POST request expected)
+105: incorrect data input
+106: session id expired
 ```
 
 ## **User APIs**
 
 ### /users/create [POST]
-Attempts to create a new user by username and returns the UID if created
+Attempts to create a new user by email and returns the UID if created
 ```
 Expected data:
 {
-	username: "aaaa"
+	email: "aaaa"
 	password: "password123"
 }
 Returned data:
 {
-	status: {success: True, errorCode: 0},
-	"userUID": "aaaa"
+	status: {success: True, errorCode: 0}
 }
 ```
 #### Call-specific error codes
 ```
 0: None, successful
-1: User id already exists
+1: User with email already exists
 ```
-
+## /users/login [POST]
+Attempts to login a user given their credentials
+```
+Expected data:
+{
+	email: "aaaaa",
+	password: "aaaa",
+}
+Returned data:
+{
+	status: {success: True, errorCode: 0},
+	sessionId: "asdkasdjk23j123jkdasd"
+}
+```
+### Call-specific error codes
+```
+0: None, successful
+1: email does not exist
+2: password incorrect
+```
+## /users/logout [GET]
+Attempts to login a user given their credentials
+```
+Expected data: NONE
+Returned data:
+{
+	status: {success: True, errorCode: 0}
+}
+```
 ### /users/settings/get [GET]
 Attempts to get the list of built-in settings for a user
 ```
@@ -59,27 +88,27 @@ Returned data:
 {
 	status: {success: True, errorCode: 0},
 	settings: {
-		"sex": "f",
-		"weight": 130,
-		"height": 65,
-		"allowedExercises": {
-			"yoga": true,
-			"pilates": true,
-			"cycling": true,
-			"stretching": true,
-			"tai chi": true,
-			"weightlifting": true,
-			"rowing": true,
-			"squats": true,
-			"walking": true,
-			"running": true,
-			"hiking": true,
-			"elliptical": true,
-			"pushups": true,
-			"swimming": true,
-			"dance": true,
-			"lunges": true,
-			"boxing": true,
+		sex: "f",
+		weight: 130,
+		height: 65,
+		allowedExercises: {
+			yoga: true,
+			pilates: true,
+			cycling: true,
+			stretching: true,
+			tai chi: true,
+			weightlifting: true,
+			rowing: true,
+			squats: true,
+			walking: true,
+			running: true,
+			hiking: true,
+			elliptical: true,
+			pushups: true,
+			swimming: true,
+			dance: true,
+			lunges: true,
+			boxing: true,
 		}
 	}
 }
