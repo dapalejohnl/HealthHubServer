@@ -7,7 +7,7 @@ C:\Users\Usr\Directory Python3 server.py
 
 Once running, you can use any browser you'd like to test if the local server is running. You can do so by typing:
 ```
-127.0.0.1/
+127.0.0.1:8000/
 ```
 and then press enter to see what is returned! If you get a response, it should say "Hello World!"
 
@@ -113,7 +113,6 @@ Returned data:
 	}
 }
 ```
-
 ### /users/settings/edit [POST]
 Attempts to change any built-in setting
 ```
@@ -132,6 +131,23 @@ Returned data:
 0: None, successful
 1: Invalid setting type
 ```
+## /users/getlifescore [GET]
+Returns calculated lifestyle score
+```
+Expected data: NONE
+Returned data:
+{
+	status: {success: True, errorCode: 0},
+	score: 86.4
+}
+```
+### Call-specific error codes
+```
+0: None, successful
+1: email does not exist
+2: password incorrect
+```
+
 
 
 ## **Recommendation APIs**
@@ -172,6 +188,29 @@ Returned data:
 	status: {success: True, errorCode: 0},
 	plan: [
 		{sleepStart: 1685170800, sleepEnd: 1685199600, duration: 28800},
+	]
+}
+```
+
+## **Data Pages Retrieval APIs**
+
+### /datapages/retrieve [GET]
+Attempts to retrieve stored data information for the currently logged in session.
+```
+Expected data: {
+	fieldName: "walkingDistance",
+	pageNum: 0,
+	minTimestamp: 0, [OPTIONAL TIMESTAMP]
+	maxTimestamp: 0, [OPTIONAL TIMESTAMP]
+}
+Returned data:
+{
+	status: {success: True, errorCode: 0},
+	data = [
+		{timestamp: 0, value: 67.1},
+		{timestamp: 1, value: 65.5},
+		{timestamp: 2, value: 63.3},
+		{timestamp: 3, value: 62.5},
 	]
 }
 ```
