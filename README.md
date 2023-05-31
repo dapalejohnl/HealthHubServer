@@ -11,7 +11,7 @@ Once running, you can use any browser you'd like to test if the local server is 
 ```
 and then press enter to see what is returned! If you get a response, it should say "Hello World!"
 
-### Creating test API calls with the "reqeust
+### Creating test API calls with the "request helper"
 You can use HealthHubServer/server/HealthHub/helpers/requesttester.py and its associated "requesttestsettings.json" file to create test calls. Edit the .json file to change the requests. You can then run this to run the file:
 ```
 python reqeusttester.py requesttestsettings.json
