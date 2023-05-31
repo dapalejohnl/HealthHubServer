@@ -2,7 +2,7 @@
 
 Start the server by using the command prompt and typing
 ```
-C:\Users\Usr\Directory Python3 server.py
+..\HealthHubServer\server\HealthHub python manage.py runserver
 ```
 
 Once running, you can use any browser you'd like to test if the local server is running. You can do so by typing:
@@ -43,7 +43,8 @@ Expected data:
 }
 Returned data:
 {
-	status: {success: True, errorCode: 0}
+	status: {success: True, errorCode: 0},
+	userUID: "abc"
 }
 ```
 #### Call-specific error codes

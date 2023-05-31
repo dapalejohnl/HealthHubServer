@@ -46,7 +46,8 @@ def createuser(request):
 				user_settings_object.save()
 				
 				return JsonResponse({
-					"status": {"success": True, "errorCode": 0}
+					"status": {"success": True, "errorCode": 0},
+					"userUID": user_id
 				})
 			else:
 				return JsonResponse({"status": {"success": False, "errorCode": 1}})
