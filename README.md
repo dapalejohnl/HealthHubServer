@@ -1,16 +1,21 @@
 # HealthHubServer
 
-Start the server by using the command prompt and typing
+### Starting the server
+Start the server by using the command prompt and typing:
 ```
 ..\HealthHubServer\server\HealthHub python manage.py runserver
 ```
-
 Once running, you can use any browser you'd like to test if the local server is running. You can do so by typing:
 ```
 127.0.0.1:8000/
 ```
 and then press enter to see what is returned! If you get a response, it should say "Hello World!"
 
+### Creating test API calls with the "reqeust
+You can use HealthHubServer/server/HealthHub/helpers/requesttester.py and its associated "requesttestsettings.json" file to create test calls. Edit the .json file to change the requests. You can then run this to run the file:
+```
+python reqeusttester.py requesttestsettings.json
+```
 
 # Backend APIs
 - All APIs besides the first two account endpoints should have the session id as a header:
