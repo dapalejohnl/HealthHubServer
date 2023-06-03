@@ -1,5 +1,11 @@
 from lxml import etree
-import shelve
+
+import requests
+import json
+import datetime
+
+BACKEND_HOST_IP = "127.0.0.1:8000" #Currently just on local machine
+TIMESTAMP_STR_FORMAT = "%Y-%m-%d %H:%M:%S %z"
 
 class ProcessData:
     def __init__(self, path, user_id) :
@@ -55,7 +61,6 @@ class ProcessData:
                     value_arr = record.attrib.values()
                     f.write('***'.join(value_arr) + '\n')
 
-
     def create_type_shelf(self, record_type):
         # Go through every record
         with shelve.open("shelves/" + record_type) as record_shelve:
@@ -67,3 +72,42 @@ class ProcessData:
                     # Put into python shelves here
                     new_list.append(dict(record.attrib))
             record_shelve[self.user_id] = new_list
+            
+    def create_server_health_events(self, record_type):
+        event_list = []
+        url = "http://{:s}/{:s}".format(BACKEND_HOST_IP, "users/logevents")
+        
+        for record in self.parsed_root.iter('Record'):
+            # When the record is of the preferred type, we will extract the values.
+            if (record.get('type') == record_type):
+                record_type = record.get('type')
+                record_value = record.get('value')
+                start_str = record.get('startDate')
+                end_str = record.get('endDate')
+                
+                start_timestamp = datetime.datetime.strptime(start_str, TIMESTAMP_STR_FORMAT).timestamp()
+                end_timestamp = datetime.datetime.strptime(end_str, TIMESTAMP_STR_FORMAT).timestamp()
+                
+                new_event = {
+                    "type": record_type,
+                    "value": record_value,
+                    "startTimestamp": int(start_timestamp),
+                    "endTimestamp": int(end_timestamp)
+                }
+                event_list.append(new_event)
+                
+            if len(event_list) >= 5000:
+                request_data = {
+                    "userUID": self.user_id,
+                    "events": event_list
+                }
+                response = requests.post(url, json=request_data, timeout=5)
+                event_list = []
+        
+        if len(event_list) > 0:
+            request_data = {
+                "userUID": self.user_id,
+                "events": event_list
+            }
+            response = requests.post(url, json=request_data, timeout=5)
+            event_list = []

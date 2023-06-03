@@ -86,6 +86,43 @@ Returned data:
 	status: {success: True, errorCode: 0}
 }
 ```
+## /users/logevents [POST]
+Attempts to log a health event for a user. This event should only be called internally
+```
+Expected data: {
+	userUID: "aaa",
+	events: [
+		{type: "HKWalkSpeed", value: 1, startTimestamp: 0, endTimestamp: 1},
+		{type: "HKWalkSpeed", value: 1, startTimestamp: 0, endTimestamp: 1},
+		{type: "HKWalkSpeed", value: 1, startTimestamp: 0, endTimestamp: 1},
+		{type: "HKWalkSpeed", value: 1, startTimestamp: 0, endTimestamp: 1}
+	]
+}
+Returned data:
+{
+	status: {success: True, errorCode: 0}
+}
+```
+## /users/getevents [GET]
+Attempts to get health events for a specific user. This event should only be called internally
+```
+Expected data: {
+	userUID: "aaa",
+	typeName: "HKQuantityTypeIdentifierFlightsClimbed",
+	minTimestamp: 0,
+	maxTimestamp: 4
+}
+Returned data:
+{
+	status: {success: True, errorCode: 0},
+	data: [
+		{timestamp: 1, value: 1.0},
+		{timestamp: 2, value: 2.5},
+		{timestamp: 3, value: 4.2},
+		{timestamp: 4, value: 1.1}
+	]
+}
+```
 ### /users/settings/get [GET]
 Attempts to get the list of built-in settings for a user
 ```

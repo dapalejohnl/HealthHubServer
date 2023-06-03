@@ -1,6 +1,7 @@
-
 *.xml
 *.pyc
 *.bak
 *.dat
 *.dir
+*.sqlite3
+*.sqlite3-journal

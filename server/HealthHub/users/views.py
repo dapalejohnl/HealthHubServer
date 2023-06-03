@@ -6,7 +6,7 @@ import datetime
 from django.http import HttpResponse, JsonResponse
 from django.utils import timezone
 
-from users.models import User, UserSettings, Session
+from users.models import User, UserSettings, Session, HealthEvent
 
 from helpers.requesthelper import RequestChecker
 from helpers.datahelper import DefaultDataHelper
@@ -104,3 +104,59 @@ def logout(request):
 		return JsonResponse({"status": {"success": False, "errorCode": request_status}})
 	return JsonResponse({"status": {"success": False, "errorCode": 101}})
 	
+def logevents(request):
+	request_status = RequestChecker.checkRequest(request, session=False, method="POST")
+	if request_status == 0:
+		data = json.loads(request.body.decode("utf-8"))
+		if data.get("userUID") and data.get("events"):
+			event_list = data.get("events")
+			health_objects = []
+			for event in event_list:
+				health_event_object = HealthEvent(
+					userUID = data.get("userUID"),
+					createdTime = timezone.now().timestamp(),
+					type = event.get("type"),
+					value = event.get("value"),
+					startTime = event.get("startTimestamp"),
+					endTime = event.get("endTimestamp")
+				)
+				health_objects.append(health_event_object)
+			HealthEvent.objects.bulk_create(health_objects)
+			return JsonResponse({"status": {"success": True, "errorCode": 0}})
+		else:
+			return JsonResponse({"status": {"success": False, "errorCode": 105}})
+	else:
+		return JsonResponse({"status": {"success": False, "errorCode": request_status}})
+	return JsonResponse({"status": {"success": False, "errorCode": 101}})
+	
+def getevents(request):
+	request_status = RequestChecker.checkRequest(request, session=False, method="GET")
+	if request_status == 0:
+		data = json.loads(request.body.decode("utf-8"))
+		if data.get("userUID") and data.get("typeName"):
+			min_timestamp_str = data.get("minTimestamp")
+			max_timestamp_str = data.get("maxTimestamp")
+		
+			return_data = []
+			events = None
+			if min_timestamp_str and max_timestamp_str:
+				min_timestamp = int(min_timestamp_str)
+				max_timestamp = int(max_timestamp_str)
+				events = HealthEvent.objects.filter(userUID=data.get("userUID"), type=data.get("typeName"), startTime__range=(min_timestamp, max_timestamp)).order_by("-startTime")
+			else:
+				events = HealthEvent.objects.filter(userUID=data.get("userUID"), type=data.get("typeName")).order_by("-startTime")
+			for i in range(0, len(events)):
+				event_object = events[i]
+				return_data.append({
+					"timestamp": event_object.startTime,
+					"value": event_object.value,
+				})
+			return JsonResponse({
+				"status": {"success": True, "errorCode": 0},
+				"data": return_data
+			})
+		else:
+			return JsonResponse({"status": {"success": False, "errorCode": 105}})
+	else:
+		return JsonResponse({"status": {"success": False, "errorCode": request_status}})
+	return JsonResponse({"status": {"success": False, "errorCode": 101}})

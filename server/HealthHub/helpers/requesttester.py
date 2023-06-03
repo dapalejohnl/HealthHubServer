@@ -6,8 +6,6 @@ import re
 import time
 import sys
 
-session = requests.Session()
-
 def CreateRequest(settings_file):
 	settings = open(settings_file, "r")
 	settings_data = json.load(settings)
@@ -18,14 +16,14 @@ def CreateRequest(settings_file):
 	request_data = settings_data["data"]
 	
 	settings.close()
-
-	session.headers.update({"session-id": session_id})
+	
+	headers = {"session-id": session_id}
 
 	response = None
 	if request_method == "GET":
-		response = session.get(url, timeout=2, params=request_data)
+		response = requests.get(url, timeout=2, json=request_data, headers=headers)
 	else:
-		response = session.post(url, request_data, timeout=2)
+		response = requests.post(url, json=request_data, headers=headers, timeout=2)
 	
 	print("Response code:", response.status_code)
 	if response.status_code == 200:
