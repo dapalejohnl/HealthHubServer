@@ -14,7 +14,7 @@ from helpers.datahelper import DefaultDataHelper
 def createuser(request):
 	request_status = RequestChecker.checkRequest(request, session=False, method="POST")
 	if request_status == 0:
-		data = request.POST.dict()
+		data = json.loads(request.body.decode("utf-8"))
 		if data.get("email") and data.get("password"):
 			new_email = data["email"]
 			new_password = data["password"]
@@ -60,7 +60,7 @@ def createuser(request):
 def login(request):
 	request_status = RequestChecker.checkRequest(request, session=False, method="POST")
 	if request_status == 0:
-		data = request.POST.dict()
+		data = json.loads(request.body.decode("utf-8"))
 		if data.get("email") and data.get("password"):
 			new_email = data["email"]
 			new_password = data["password"]
