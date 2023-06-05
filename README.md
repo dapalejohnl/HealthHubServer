@@ -196,7 +196,7 @@ Expected data: NONE
 Returned data:
 {
 	status: {success: True, errorCode: 0},
-	exercises: [
+	exercise: [
 		{type = "exercise", name: "swimming", duration: 3600},
 		{type = "exercise", name: "running", duration: 1800},
 		{type = "exercise", name: "push ups", duration: 600}
