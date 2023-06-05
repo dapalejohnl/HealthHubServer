@@ -189,45 +189,27 @@ Returned data:
 
 ## **Recommendation APIs**
 
-### /recommendations/exerciseplan [GET]
-Attempts to get the next exercise recommendation
+### /recommendations/get [GET]
+Attempts to get the next set of recommendations
 ```
 Expected data: NONE
 Returned data:
 {
 	status: {success: True, errorCode: 0},
-	plan: [
+	exercises: [
 		{type = "exercise", name: "swimming", duration: 3600},
 		{type = "exercise", name: "running", duration: 1800},
 		{type = "exercise", name: "push ups", duration: 600}
-	]
-}
-```
-### /recommendations/mealplan [GET]
-Attempts to get the next meal recommendation
-```
-Expected data: NONE
-Returned data:
-{
-	status: {success: True, errorCode: 0},
-	plan: [
+	],
+	meal: [
 		{type = "meal", name: "pasta", calories: 800},
 		{type = "meal", name: "fruits", calories: 650},
 		{type = "meal", name: "banana", calories: 400}
-	]
-}
-```
-### /recommendations/sleepplan [GET]
-Attempts to get the next sleep recommendation
-```
-Expected data: NONE
-Returned data:
-{
-	status: {success: True, errorCode: 0},
-	plan: [
-		{type = "sleep", sleepStart: 1685170800, sleepEnd: 1685199600, duration: 28800},
-		{type = "sleep", sleepStart: 1685170800, sleepEnd: 1685199600, duration: 24000},
-		{type = "sleep", sleepStart: 1685170800, sleepEnd: 1685199600, duration: 21000}
+	],
+	sleep: [
+		{type = "sleep", duration: 3600},
+		{type = "sleep", duration: 1800},
+		{type = "sleep", duration: 600}
 	]
 }
 ```
