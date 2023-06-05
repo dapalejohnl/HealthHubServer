@@ -1,10 +1,7 @@
 {
 	"url": "http://127.0.0.1:8000",
-	"endpoint": "users/settings/get",
+	"endpoint": "recommendations/get",
 	"requestMethod": "GET",
-	"sessionId": "7db66fe3-4e41-440d-94a7-06b91febe289",
-	"data": {
-        "settingName": "weight",
-		"value": 25
-	}
+	"sessionId": "e14c73eb-5fb4-44f0-b9a3-05d6786e01e8",
+	"data": {}
 }

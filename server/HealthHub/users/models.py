@@ -30,4 +30,5 @@ class PlanEvent(models.Model):
 	userUID = models.CharField("uid", max_length=64)
 	createdTime = models.BigIntegerField("time created")
 	type = models.CharField("plan type", max_length=256)
+	progressRatio = models.FloatField("progress ratio")
 	score = models.FloatField("plan score")

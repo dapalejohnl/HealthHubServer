@@ -122,7 +122,7 @@ def getlifescore(request):
 		if len(exercise_events) > 0:
 			event_sum = 0
 			for event in exercise_events:
-				event_sum += event.score
+				event_sum += event.progressRatio
 			total_score += event_sum / len(exercise_events)
 			event_types_considered += 1
 		
@@ -130,7 +130,7 @@ def getlifescore(request):
 		if len(meal_events) > 0:
 			event_sum = 0
 			for event in meal_events:
-				event_sum += event.score
+				event_sum += event.progressRatio
 			total_score += event_sum / len(meal_events)
 			event_types_considered += 1
 		
@@ -138,11 +138,11 @@ def getlifescore(request):
 		if len(sleep_events) > 0:
 			event_sum = 0
 			for event in sleep_events:
-				event_sum += event.score
+				event_sum += event.progressRatio
 			total_score += event_sum / len(sleep_events)
 			event_types_considered += 1
 		
-		averaged_score = total_score / event_types_considered
+		averaged_score = round(total_score / event_types_considered, 2)
 		return JsonResponse({
 			"status": {"success": True, "errorCode": 0},
 			"score": averaged_score,
