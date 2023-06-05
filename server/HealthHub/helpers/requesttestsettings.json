@@ -1,10 +1,10 @@
 {
 	"url": "http://127.0.0.1:8000",
-	"endpoint": "users/login",
+	"endpoint": "users/settings/edit",
 	"requestMethod": "POST",
-	"sessionId": "",
+	"sessionId": "aa5aacab-5f6e-4c4e-b115-cedcfc26d283",
 	"data": {
-        "email": "testemail@uci.edu",
-		"password": "password123"
+        "settingName": "weight",
+		"value": 25
 	}
 }

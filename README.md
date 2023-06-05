@@ -124,7 +124,7 @@ Returned data:
 }
 ```
 ### /users/settings/get [GET]
-Attempts to get the list of built-in settings for a user
+Attempts to get the list of built-in settings for a currently logged in user (session-id)
 ```
 Expected data: NONE
 Returned data:
@@ -205,6 +205,7 @@ Returned data:
 	plan: [
 		{exercise: "swimming", duration: 3600},
 		{exercise: "running", duration: 1800},
+		{exercise: "push ups", duration: 600}
 	]
 }
 ```
@@ -216,9 +217,9 @@ Returned data:
 {
 	status: {success: True, errorCode: 0},
 	plan: [
-		{meal: "banana", calories: 400},
-		{meal: "fruits", calories: 400},
 		{meal: "pasta", calories: 800},
+		{meal: "fruits", calories: 650},
+		{meal: "banana", calories: 400}
 	]
 }
 ```
@@ -231,29 +232,20 @@ Returned data:
 	status: {success: True, errorCode: 0},
 	plan: [
 		{sleepStart: 1685170800, sleepEnd: 1685199600, duration: 28800},
+		{sleepStart: 1685170800, sleepEnd: 1685199600, duration: 24000},
+		{sleepStart: 1685170800, sleepEnd: 1685199600, duration: 21000}
 	]
 }
 ```
-
-## **Data Pages Retrieval APIs**
-
-### /datapages/retrieve [GET]
-Attempts to retrieve stored data information for the currently logged in session.
+### /recommendations/chooseplan [POST]
+Attempts to set the latest addition
 ```
 Expected data: {
-	fieldName: "walkingDistance",
-	pageNum: 0,
-	minTimestamp: 0, [OPTIONAL TIMESTAMP]
-	maxTimestamp: 0, [OPTIONAL TIMESTAMP]
+	planName: "exercise",
+	planData: {exercise: "swimming", duration: 3600}
 }
 Returned data:
 {
-	status: {success: True, errorCode: 0},
-	data = [
-		{timestamp: 0, value: 67.1},
-		{timestamp: 1, value: 65.5},
-		{timestamp: 2, value: 63.3},
-		{timestamp: 3, value: 62.5},
-	]
+	status: {success: True, errorCode: 0}
 }
 ```

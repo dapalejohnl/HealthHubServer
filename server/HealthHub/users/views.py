@@ -61,6 +61,7 @@ def login(request):
 	request_status = RequestChecker.checkRequest(request, session=False, method="POST")
 	if request_status == 0:
 		data = json.loads(request.body.decode("utf-8"))
+		print(data)
 		if data.get("email") and data.get("password"):
 			new_email = data["email"]
 			new_password = data["password"]
@@ -155,6 +156,47 @@ def getevents(request):
 				"status": {"success": True, "errorCode": 0},
 				"data": return_data
 			})
+		else:
+			return JsonResponse({"status": {"success": False, "errorCode": 105}})
+	else:
+		return JsonResponse({"status": {"success": False, "errorCode": request_status}})
+	return JsonResponse({"status": {"success": False, "errorCode": 101}})
+	
+def getsettings(request):
+	request_status = RequestChecker.checkRequest(request, session=True, method="GET")
+	if request_status == 0:
+		session_id = request.headers["session-id"]
+		session_object = Session.objects.get(sessionUID=session_id)
+		settings_object = UserSettings.objects.get(userUID=session_object.userUID)
+		
+		return JsonResponse({
+			"status": {"success": True, "errorCode": 0},
+			"settings": {
+				"sex": settings_object.sex,
+				"weight": settings_object.weight,
+				"height": settings_object.height,
+				"allowedExercises": settings_object.exercises,
+			}
+		})
+	else:
+		return JsonResponse({"status": {"success": False, "errorCode": request_status}})
+	return JsonResponse({"status": {"success": False, "errorCode": 101}})
+	
+def editsettings(request):
+	request_status = RequestChecker.checkRequest(request, session=True, method="POST")
+	if request_status == 0:
+		data = json.loads(request.body.decode("utf-8"))
+		if data.get("settingName") and data.get("value"):
+			session_id = request.headers["session-id"]
+			session_object = Session.objects.get(sessionUID=session_id)
+			settings_object = UserSettings.objects.get(userUID=session_object.userUID)
+			
+			try:
+				settings_object[data.get("settingName")] = data.get("value")
+			except Exception as e:
+				print(e)
+			
+			return JsonResponse({"status": {"success": True, "errorCode": 105}})
 		else:
 			return JsonResponse({"status": {"success": False, "errorCode": 105}})
 	else:

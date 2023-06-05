@@ -25,4 +25,3 @@ class HealthEvent(models.Model):
 	endTime = models.BigIntegerField("time ended", null=True, blank=True)
 	type = models.CharField("record type", max_length=256)
 	value = models.FloatField("record value")
-	
