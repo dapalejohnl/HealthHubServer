@@ -9,8 +9,8 @@ class User(models.Model):
 class UserSettings(models.Model):
 	userUID = models.CharField("uid", max_length=64)
 	sex = models.CharField(max_length=1)
-	weight = models.IntegerField()
-	height = models.IntegerField()
+	weight = models.FloatField("weight in kg")
+	height = models.FloatField("height in cm")
 	exercises = models.JSONField(default=dict)
 
 class Session(models.Model):
@@ -25,3 +25,9 @@ class HealthEvent(models.Model):
 	endTime = models.BigIntegerField("time ended", null=True, blank=True)
 	type = models.CharField("record type", max_length=256)
 	value = models.FloatField("record value")
+	
+class PlanEvent(models.Model):
+	userUID = models.CharField("uid", max_length=64)
+	createdTime = models.BigIntegerField("time created")
+	type = models.CharField("plan type", max_length=256)
+	score = models.FloatField("plan score")

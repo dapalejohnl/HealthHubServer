@@ -6,7 +6,7 @@ import datetime
 from django.http import HttpResponse, JsonResponse
 from django.utils import timezone
 
-from users.models import User, UserSettings, Session, HealthEvent
+from users.models import User, UserSettings, Session, HealthEvent, PlanEvent
 
 from helpers.requesthelper import RequestChecker
 from helpers.datahelper import DefaultDataHelper
@@ -61,7 +61,6 @@ def login(request):
 	request_status = RequestChecker.checkRequest(request, session=False, method="POST")
 	if request_status == 0:
 		data = json.loads(request.body.decode("utf-8"))
-		print(data)
 		if data.get("email") and data.get("password"):
 			new_email = data["email"]
 			new_password = data["password"]
@@ -104,7 +103,54 @@ def logout(request):
 	else:
 		return JsonResponse({"status": {"success": False, "errorCode": request_status}})
 	return JsonResponse({"status": {"success": False, "errorCode": 101}})
-	
+
+def getlifescore(request):
+	request_status = RequestChecker.checkRequest(request, session=True, method="GET")
+	if request_status == 0:
+		session_id = request.headers["session-id"]
+		session_object = Session.objects.get(sessionUID=session_id)
+		
+		days_considered = 7
+		event_types_considered = 0
+		total_score = 0
+		
+		exercise_events = PlanEvent.objects.filter(userUID=session_object.userUID, type="exercise").order_by("-createdTime")[:days_considered]
+		meal_events = PlanEvent.objects.filter(userUID=session_object.userUID, type="meal").order_by("-createdTime")[:days_considered]
+		sleep_events = PlanEvent.objects.filter(userUID=session_object.userUID, type="sleep").order_by("-createdTime")[:days_considered]
+		
+		# Exercise score
+		if len(exercise_events) > 0:
+			event_sum = 0
+			for event in exercise_events:
+				event_sum += event.score
+			total_score += event_sum / len(exercise_events)
+			event_types_considered += 1
+		
+		# Meal score
+		if len(meal_events) > 0:
+			event_sum = 0
+			for event in meal_events:
+				event_sum += event.score
+			total_score += event_sum / len(meal_events)
+			event_types_considered += 1
+		
+		# Sleep score
+		if len(sleep_events) > 0:
+			event_sum = 0
+			for event in sleep_events:
+				event_sum += event.score
+			total_score += event_sum / len(sleep_events)
+			event_types_considered += 1
+		
+		averaged_score = total_score / event_types_considered
+		return JsonResponse({
+			"status": {"success": True, "errorCode": 0},
+			"score": averaged_score,
+		})
+	else:
+		return JsonResponse({"status": {"success": False, "errorCode": request_status}})
+	return JsonResponse({"status": {"success": False, "errorCode": 101}})
+
 def logevents(request):
 	request_status = RequestChecker.checkRequest(request, session=False, method="POST")
 	if request_status == 0:
@@ -192,11 +238,14 @@ def editsettings(request):
 			settings_object = UserSettings.objects.get(userUID=session_object.userUID)
 			
 			try:
-				settings_object[data.get("settingName")] = data.get("value")
-			except Exception as e:
-				print(e)
+				attr_val = getattr(settings_object, data.get("settingName"), None)
+				if attr_val != None:
+					setattr(settings_object, data.get("settingName"), data.get("value"))
+					settings_object.save()
+			except:
+				return JsonResponse({"status": {"success": False, "errorCode": 1}})
 			
-			return JsonResponse({"status": {"success": True, "errorCode": 105}})
+			return JsonResponse({"status": {"success": True, "errorCode": 0}})
 		else:
 			return JsonResponse({"status": {"success": False, "errorCode": 105}})
 	else:

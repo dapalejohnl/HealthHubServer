@@ -132,8 +132,8 @@ Returned data:
 	status: {success: True, errorCode: 0},
 	settings: {
 		sex: "f",
-		weight: 130,
-		height: 65,
+		weight: 58.4,
+		height: 167.8,
 		allowedExercises: {
 			yoga: true,
 			pilates: true,
@@ -175,20 +175,14 @@ Returned data:
 1: Invalid setting type
 ```
 ## /users/getlifescore [GET]
-Returns calculated lifestyle score
+Returns calculated lifestyle score. This factors in the last seven days of activies and how close the user got to their ideal recommended plan per day
 ```
 Expected data: NONE
 Returned data:
 {
 	status: {success: True, errorCode: 0},
-	score: 86.4
+	score: 0.864
 }
-```
-### Call-specific error codes
-```
-0: None, successful
-1: email does not exist
-2: password incorrect
 ```
 
 
@@ -203,9 +197,9 @@ Returned data:
 {
 	status: {success: True, errorCode: 0},
 	plan: [
-		{exercise: "swimming", duration: 3600},
-		{exercise: "running", duration: 1800},
-		{exercise: "push ups", duration: 600}
+		{type = "exercise", name: "swimming", duration: 3600},
+		{type = "exercise", name: "running", duration: 1800},
+		{type = "exercise", name: "push ups", duration: 600}
 	]
 }
 ```
@@ -217,9 +211,9 @@ Returned data:
 {
 	status: {success: True, errorCode: 0},
 	plan: [
-		{meal: "pasta", calories: 800},
-		{meal: "fruits", calories: 650},
-		{meal: "banana", calories: 400}
+		{type = "meal", name: "pasta", calories: 800},
+		{type = "meal", name: "fruits", calories: 650},
+		{type = "meal", name: "banana", calories: 400}
 	]
 }
 ```
@@ -231,18 +225,19 @@ Returned data:
 {
 	status: {success: True, errorCode: 0},
 	plan: [
-		{sleepStart: 1685170800, sleepEnd: 1685199600, duration: 28800},
-		{sleepStart: 1685170800, sleepEnd: 1685199600, duration: 24000},
-		{sleepStart: 1685170800, sleepEnd: 1685199600, duration: 21000}
+		{type = "sleep", sleepStart: 1685170800, sleepEnd: 1685199600, duration: 28800},
+		{type = "sleep", sleepStart: 1685170800, sleepEnd: 1685199600, duration: 24000},
+		{type = "sleep", sleepStart: 1685170800, sleepEnd: 1685199600, duration: 21000}
 	]
 }
 ```
 ### /recommendations/chooseplan [POST]
-Attempts to set the latest addition
+Attempts to log the user's preference based on recommendations given. This is used to determine lifestyle scores later on
 ```
 Expected data: {
 	planName: "exercise",
-	planData: {exercise: "swimming", duration: 3600}
+	idealPlan: {type = "exercise", name: "swimming", duration: 3600},
+	chosenPlan: {type = "exercise", name: "running", duration: 1800}
 }
 Returned data:
 {

@@ -1,8 +1,8 @@
 {
 	"url": "http://127.0.0.1:8000",
-	"endpoint": "users/settings/edit",
-	"requestMethod": "POST",
-	"sessionId": "aa5aacab-5f6e-4c4e-b115-cedcfc26d283",
+	"endpoint": "users/settings/get",
+	"requestMethod": "GET",
+	"sessionId": "7db66fe3-4e41-440d-94a7-06b91febe289",
 	"data": {
         "settingName": "weight",
 		"value": 25
