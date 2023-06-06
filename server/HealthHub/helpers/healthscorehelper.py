@@ -88,9 +88,7 @@ class HealthScores():
 			for event in sleep_events:
 				event_sum += event.score
 			avg_sleep_score = event_sum / len(sleep_events)
-		
-		print(avg_exercise_score, avg_meal_score, avg_sleep_score)
-		
+				
 		if plan_type == "exercise":
 			if avg_exercise_score <= 50:
 				# Use previous energy burned data to get a better understanding of a newer user
@@ -107,18 +105,18 @@ class HealthScores():
 						new_avg_score += event.value
 					avg_exercise_score = new_avg_score / len(energy_burned_events)
 				
-			return clamp(avg_exercise_score, 100, 2500) * goal_multiplier
+			return int(clamp(avg_exercise_score, 100, 2500) * goal_multiplier)
 		elif plan_type == "meal":
 			# do more stuff in here for context
 			
 			
 			
-			return clamp(avg_meal_score, 100, 2500) * goal_multiplier
+			return int(clamp(avg_meal_score, 100, 2500) * goal_multiplier)
 		elif plan_type == "sleep":
 			# do more stuff in here for context
 			
 			
-			return clamp(avg_sleep_score, 14400, 50400) * goal_multiplier
+			return int(clamp(avg_sleep_score, 14400, 50400) * goal_multiplier)
 		return 0
 
 	def getRecommendationByScore(user_uid, plan_type, score):

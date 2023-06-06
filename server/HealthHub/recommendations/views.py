@@ -51,9 +51,7 @@ def chooseplan(request):
 			
 			score_ratio = HealthScores.getPlanScoreRatio(session_object.userUID, data.get("idealPlan"), data.get("chosenPlan"))
 			point_value = HealthScores.getPlanPointValue(session_object.userUID, data.get("chosenPlan"))
-			
-			print(score_ratio, point_value)
-			
+						
 			# Log a new event for this user
 			plan_object = PlanEvent(
 				userUID = session_object.userUID,
