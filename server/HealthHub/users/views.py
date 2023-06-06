@@ -39,8 +39,8 @@ def createuser(request):
 				user_settings_object = UserSettings(
 					userUID = user_id,
 					sex = "m",
-					weight = 0,
-					height = 0,
+					weight = 0.01,
+					height = 0.01,
 					exercises = DefaultDataHelper.getExerciseData()
 				)
 				user_settings_object.save()
@@ -95,7 +95,7 @@ def login(request):
 def logout(request):
 	request_status = RequestChecker.checkRequest(request, session=True, method="GET")
 	if request_status == 0:
-		session_id = request.headers["session-id"]
+		session_id = request.headers["Session-Id"]
 		session_object = Session.objects.get(sessionUID=session_id)
 		if session_object:
 			session_object.delete()
@@ -107,7 +107,7 @@ def logout(request):
 def getlifescore(request):
 	request_status = RequestChecker.checkRequest(request, session=True, method="GET")
 	if request_status == 0:
-		session_id = request.headers["session-id"]
+		session_id = request.headers["Session-Id"]
 		session_object = Session.objects.get(sessionUID=session_id)
 		
 		days_considered = 7
@@ -211,7 +211,7 @@ def getevents(request):
 def getsettings(request):
 	request_status = RequestChecker.checkRequest(request, session=True, method="GET")
 	if request_status == 0:
-		session_id = request.headers["session-id"]
+		session_id = request.headers["Session-Id"]
 		session_object = Session.objects.get(sessionUID=session_id)
 		settings_object = UserSettings.objects.get(userUID=session_object.userUID)
 		
@@ -233,7 +233,7 @@ def editsettings(request):
 	if request_status == 0:
 		data = json.loads(request.body.decode("utf-8"))
 		if data.get("settingName") and data.get("value"):
-			session_id = request.headers["session-id"]
+			session_id = request.headers["Session-Id"]
 			session_object = Session.objects.get(sessionUID=session_id)
 			settings_object = UserSettings.objects.get(userUID=session_object.userUID)
 			

@@ -15,7 +15,7 @@ from helpers.healthscorehelper import HealthScores
 def getplans(request):
 	request_status = RequestChecker.checkRequest(request, session=True, method="GET")
 	if request_status == 0:
-		session_id = request.headers["session-id"]
+		session_id = request.headers["Session-Id"]
 		session_object = Session.objects.get(sessionUID=session_id)
 		user_id = session_object.userUID
 		
@@ -46,7 +46,7 @@ def chooseplan(request):
 	if request_status == 0:
 		data = json.loads(request.body.decode("utf-8"))
 		if data.get("planName") and data.get("idealPlan") and data.get("chosenPlan"):
-			session_id = request.headers["session-id"]
+			session_id = request.headers["Session-Id"]
 			session_object = Session.objects.get(sessionUID=session_id)
 			
 			score_ratio = HealthScores.getPlanScoreRatio(session_object.userUID, data.get("idealPlan"), data.get("chosenPlan"))

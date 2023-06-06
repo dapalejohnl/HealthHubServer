@@ -1,7 +1,10 @@
 {
 	"url": "http://127.0.0.1:8000",
-	"endpoint": "recommendations/get",
-	"requestMethod": "GET",
-	"sessionId": "e14c73eb-5fb4-44f0-b9a3-05d6786e01e8",
-	"data": {}
+	"endpoint": "users/login",
+	"requestMethod": "POST",
+	"sessionId": "",
+	"data": {
+		"email": "test@uci.edu",
+		"password": "testpass123"
+	}
 }

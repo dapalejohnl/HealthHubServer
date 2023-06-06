@@ -9,8 +9,8 @@ class User(models.Model):
 class UserSettings(models.Model):
 	userUID = models.CharField("uid", max_length=64)
 	sex = models.CharField(max_length=1)
-	weight = models.FloatField("weight in kg")
-	height = models.FloatField("height in cm")
+	weight = models.FloatField("weight in kg", default=0.01)
+	height = models.FloatField("height in cm", default=0.01)
 	exercises = models.JSONField(default=dict)
 
 class Session(models.Model):
