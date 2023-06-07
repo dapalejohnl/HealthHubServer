@@ -34,7 +34,7 @@ exercise_met_vals = {
 	"running": 4,
 	"hiking": 2.5,
 	"elliptical": 3,
-	"pushups": 3,
+	"pushups": 5,
 	"swimming": 5,
 	"dance": 3,
 	"lunges": 3,
@@ -136,7 +136,11 @@ class HealthScores():
 
 				# Exercise duration is determined by sex. Generally women need to exercise 5-10% more than men to achieve same results.
 				# We average the extremitites (5 + 10 / 2 = 7.5%)
-				exercise_duration = (int(score * 200 / (met_val * 3.5 * user_weight)) * 60) if (user_sex == 'M') else (1.075 * int(score * 200 / (met_val * 3.5 * user_weight)) * 60)
+				exercise_duration = 0
+				if (user_sex == 'm'):
+					exercise_duration = int(score * 200 / (met_val * 3.5 * user_weight)) * 60
+				else: 
+					exercise_duration = int(1.075 * int(score * 200 / (met_val * 3.5 * user_weight)) * 60)
 				return {"type": "exercise", "name": rand_choice, "duration": exercise_duration}
 		
 		elif plan_type == "meal":
@@ -157,13 +161,21 @@ class HealthScores():
 	def getPlanPointValue(user_uid, plan):
 		user_settings = UserSettings.objects.get(userUID=user_uid)
 		user_weight = user_settings.weight
+		user_sex = user_settings.sex
 		
 		if plan.get("type") == "exercise":
 			mins_duration = math.ceil(plan.get("duration") / 60)
 			met_val = exercise_met_vals[plan.get("name")]
 			
 			#Bushman B PhD. Complete Guide to Fitness and Health 2nd Edition. American College of Sports Medicine. Human Kinetics. 2017.
-			score = mins_duration * (met_val * 3.5 * user_weight) / 200
+			
+			#Normalize the scores for both sexes
+			if (user_sex == 'm'):
+				score = mins_duration * (met_val * 3.5 * user_weight) / 200
+			else:
+				score = mins_duration * (met_val * 3.5 * user_weight) / 200 * 0.925
+			
+			print(score)
 			
 			return score
 		elif plan.get("type") == "meal":
