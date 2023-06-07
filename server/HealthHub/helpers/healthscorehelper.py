@@ -122,6 +122,7 @@ class HealthScores():
 	def getRecommendationByScore(user_uid, plan_type, score):
 		user_settings = UserSettings.objects.get(userUID=user_uid)
 		user_weight = user_settings.weight
+		user_sex = user_settings.sex
 		allowed_exercises = user_settings.exercises
 		
 		if plan_type == "exercise":
@@ -132,8 +133,12 @@ class HealthScores():
 			rand_choice = choice(allowed)
 			if rand_choice:
 				met_val = exercise_met_vals[rand_choice]
-				exercise_duration = int(score * 200 / (met_val * 3.5 * user_weight)) * 60
+
+				# Exercise duration is determined by sex. Generally women need to exercise 5-10% more than men to achieve same results.
+				# We average the extremitites (5 + 10 / 2 = 7.5%)
+				exercise_duration = (int(score * 200 / (met_val * 3.5 * user_weight)) * 60) if (user_sex == 'M') else (1.075 * int(score * 200 / (met_val * 3.5 * user_weight)) * 60)
 				return {"type": "exercise", "name": rand_choice, "duration": exercise_duration}
+		
 		elif plan_type == "meal":
 			# Pick a random meal type that has an acceptable range
 			allowed = []
