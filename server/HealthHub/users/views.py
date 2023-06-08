@@ -142,7 +142,10 @@ def getlifescore(request):
 			total_score += event_sum / len(sleep_events)
 			event_types_considered += 1
 		
-		averaged_score = round(total_score / event_types_considered, 2)
+		averaged_score = 0
+		if event_types_considered > 0:
+			averaged_score = round(total_score / event_types_considered, 2)
+		
 		return JsonResponse({
 			"status": {"success": True, "errorCode": 0},
 			"score": averaged_score,

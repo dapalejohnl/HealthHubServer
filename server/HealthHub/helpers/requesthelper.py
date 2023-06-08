@@ -5,6 +5,8 @@ session_expiration = 2592000 #30 day session expiration
 
 class RequestChecker():
 	def checkRequest(request, session=True, method="GET"):
+		print(request.headers)
+		print(request.body)
 		#Check request information
 		if request.method != method:
 			return 104
