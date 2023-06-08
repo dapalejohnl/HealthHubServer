@@ -210,19 +210,19 @@ Returned data:
 {
 	status: {success: True, errorCode: 0},
 	exercise: [
-		{type = "exercise", name: "swimming", duration: 3600},
-		{type = "exercise", name: "running", duration: 1800},
-		{type = "exercise", name: "push ups", duration: 600}
+		{type: "exercise", name: "swimming", duration: 3600},
+		{type: "exercise", name: "running", duration: 1800},
+		{type: "exercise", name: "push ups", duration: 600}
 	],
 	meal: [
-		{type = "meal", name: "pasta", calories: 800},
-		{type = "meal", name: "fruits", calories: 650},
-		{type = "meal", name: "banana", calories: 400}
+		{type: "meal", name: "pasta", calories: 800},
+		{type: "meal", name: "fruits", calories: 650},
+		{type: "meal", name: "banana", calories: 400}
 	],
 	sleep: [
-		{type = "sleep", duration: 3600},
-		{type = "sleep", duration: 1800},
-		{type = "sleep", duration: 600}
+		{type: "sleep", name: "sleep", duration: 3600},
+		{type: "sleep", name: "sleep", duration: 1800},
+		{type: "sleep", name: "sleep", duration: 600}
 	]
 }
 ```

@@ -156,7 +156,7 @@ class HealthScores():
 				return {"type": "meal", "name": rand_choice, "calories": rounded_score}
 		elif plan_type == "sleep":
 			rounded_score = int(score - (score % 100))
-			return {"type": "sleep", "duration": rounded_score}
+			return {"type": "sleep", "name": "sleep", "duration": rounded_score}
 
 	def getPlanPointValue(user_uid, plan):
 		user_settings = UserSettings.objects.get(userUID=user_uid)
