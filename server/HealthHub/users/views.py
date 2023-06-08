@@ -273,7 +273,7 @@ def getplanscore(request):
 			if len(events) > 0:
 				plan_event = events[0]
 				score_num = int(plan_event.score)
-				score_denom = int(plan_event.score * plan_event.progressRatio)
+				score_denom = int(plan_event.score / plan_event.progressRatio)
 				plan_data = {"name": plan_event.name, "value": int(plan_event.score)}
 			
 			return JsonResponse({
