@@ -1,3 +1,5 @@
+import json
+
 from users.models import User, Session
 from django.utils import timezone
 
@@ -35,3 +37,8 @@ class RequestChecker():
 			else:
 				return 102
 		return 0
+	def getPostData(request):
+		if request.POST:
+			return request.POST.dict()
+		else:
+			return json.loads(request.body.decode("utf-8"))

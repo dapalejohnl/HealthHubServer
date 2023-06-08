@@ -174,7 +174,7 @@ Returned data:
 0: None, successful
 1: Invalid setting type
 ```
-## /users/getlifescore [GET]
+### /users/getlifescore [GET]
 Returns calculated lifestyle score. This factors in the last seven days of activies and how close the user got to their ideal recommended plan per day
 ```
 Expected data: NONE
@@ -182,6 +182,16 @@ Returned data:
 {
 	status: {success: True, errorCode: 0},
 	score: 0.864
+}
+```
+### /users/getprevioussleepduration [GET]
+Returns the user's previous sleep duration based on their selected plan
+```
+Expected data: NONE
+Returned data:
+{
+	status: {success: True, errorCode: 0},
+	duration: 18000
 }
 ```
 

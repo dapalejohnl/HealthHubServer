@@ -44,7 +44,7 @@ def getplans(request):
 def chooseplan(request):
 	request_status = RequestChecker.checkRequest(request, session=True, method="POST")
 	if request_status == 0:
-		data = json.loads(request.body.decode("utf-8"))
+		data = RequestChecker.getPostData(request)
 		if data.get("planName") and data.get("idealPlan") and data.get("chosenPlan"):
 			session_id = request.headers["Session-Id"]
 			session_object = Session.objects.get(sessionUID=session_id)

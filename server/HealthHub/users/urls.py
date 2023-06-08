@@ -6,9 +6,11 @@ urlpatterns = [
 	path("create", views.createuser, name="createuser"),
 	path("login", views.login, name="login"),
 	path("logout", views.logout, name="logout"),
-	path("getlifescore", views.getlifescore, name="getlifescore"),
 	path("logevents", views.logevents, name="logevents"),
 	path("getevents", views.getevents, name="getevents"),
 	path("settings/get", views.getsettings, name="getsettings"),
 	path("settings/edit", views.editsettings, name="editsettings"),
+	
+	path("getlifescore", views.getlifescore, name="getlifescore"),
+	path("getprevioussleepduration", views.getprevioussleep, name="getprevioussleep"),
 ]

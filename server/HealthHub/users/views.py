@@ -14,7 +14,7 @@ from helpers.datahelper import DefaultDataHelper
 def createuser(request):
 	request_status = RequestChecker.checkRequest(request, session=False, method="POST")
 	if request_status == 0:
-		data = json.loads(request.body.decode("utf-8"))
+		data = RequestChecker.getPostData(request)
 		if data.get("email") and data.get("password"):
 			new_email = data["email"]
 			new_password = data["password"]
@@ -60,7 +60,7 @@ def createuser(request):
 def login(request):
 	request_status = RequestChecker.checkRequest(request, session=False, method="POST")
 	if request_status == 0:
-		data = json.loads(request.body.decode("utf-8"))
+		data = RequestChecker.getPostData(request)
 		if data.get("email") and data.get("password"):
 			new_email = data["email"]
 			new_password = data["password"]
@@ -104,60 +104,10 @@ def logout(request):
 		return JsonResponse({"status": {"success": False, "errorCode": request_status}})
 	return JsonResponse({"status": {"success": False, "errorCode": 101}})
 
-def getlifescore(request):
-	request_status = RequestChecker.checkRequest(request, session=True, method="GET")
-	if request_status == 0:
-		session_id = request.headers["Session-Id"]
-		session_object = Session.objects.get(sessionUID=session_id)
-		
-		days_considered = 7
-		event_types_considered = 0
-		total_score = 0
-		
-		exercise_events = PlanEvent.objects.filter(userUID=session_object.userUID, type="exercise").order_by("-createdTime")[:days_considered]
-		meal_events = PlanEvent.objects.filter(userUID=session_object.userUID, type="meal").order_by("-createdTime")[:days_considered]
-		sleep_events = PlanEvent.objects.filter(userUID=session_object.userUID, type="sleep").order_by("-createdTime")[:days_considered]
-		
-		# Exercise score
-		if len(exercise_events) > 0:
-			event_sum = 0
-			for event in exercise_events:
-				event_sum += event.progressRatio
-			total_score += event_sum / len(exercise_events)
-			event_types_considered += 1
-		
-		# Meal score
-		if len(meal_events) > 0:
-			event_sum = 0
-			for event in meal_events:
-				event_sum += event.progressRatio
-			total_score += event_sum / len(meal_events)
-			event_types_considered += 1
-		
-		# Sleep score
-		if len(sleep_events) > 0:
-			event_sum = 0
-			for event in sleep_events:
-				event_sum += event.progressRatio
-			total_score += event_sum / len(sleep_events)
-			event_types_considered += 1
-		
-		averaged_score = 0
-		if event_types_considered > 0:
-			averaged_score = round(total_score / event_types_considered, 2)
-		
-		return JsonResponse({
-			"status": {"success": True, "errorCode": 0},
-			"score": averaged_score,
-		})
-	else:
-		return JsonResponse({"status": {"success": False, "errorCode": request_status}})
-	return JsonResponse({"status": {"success": False, "errorCode": 101}})
-
 def logevents(request):
 	request_status = RequestChecker.checkRequest(request, session=False, method="POST")
 	if request_status == 0:
-		data = json.loads(request.body.decode("utf-8"))
+		data = RequestChecker.getPostData(request)
 		if data.get("userUID") and data.get("events"):
 			event_list = data.get("events")
 			health_objects = []
@@ -234,7 +184,7 @@ def getsettings(request):
 def editsettings(request):
 	request_status = RequestChecker.checkRequest(request, session=True, method="POST")
 	if request_status == 0:
-		data = json.loads(request.body.decode("utf-8"))
+		data = RequestChecker.getPostData(request)
 		if data.get("settingName") and data.get("value"):
 			session_id = request.headers["Session-Id"]
 			session_object = Session.objects.get(sessionUID=session_id)
@@ -251,6 +201,78 @@ def editsettings(request):
 			return JsonResponse({"status": {"success": True, "errorCode": 0}})
 		else:
 			return JsonResponse({"status": {"success": False, "errorCode": 105}})
+	else:
+		return JsonResponse({"status": {"success": False, "errorCode": request_status}})
+	return JsonResponse({"status": {"success": False, "errorCode": 101}})
+	
+def getlifescore(request):
+	request_status = RequestChecker.checkRequest(request, session=True, method="GET")
+	if request_status == 0:
+		session_id = request.headers["Session-Id"]
+		session_object = Session.objects.get(sessionUID=session_id)
+		
+		days_considered = 7
+		event_types_considered = 0
+		total_score = 0
+		
+		exercise_events = PlanEvent.objects.filter(userUID=session_object.userUID, type="exercise").order_by("-createdTime")[:days_considered]
+		meal_events = PlanEvent.objects.filter(userUID=session_object.userUID, type="meal").order_by("-createdTime")[:days_considered]
+		sleep_events = PlanEvent.objects.filter(userUID=session_object.userUID, type="sleep").order_by("-createdTime")[:days_considered]
+		
+		# Exercise score
+		if len(exercise_events) > 0:
+			event_sum = 0
+			for event in exercise_events:
+				event_sum += event.progressRatio
+			total_score += event_sum / len(exercise_events)
+			event_types_considered += 1
+		
+		# Meal score
+		if len(meal_events) > 0:
+			event_sum = 0
+			for event in meal_events:
+				event_sum += event.progressRatio
+			total_score += event_sum / len(meal_events)
+			event_types_considered += 1
+		
+		# Sleep score
+		if len(sleep_events) > 0:
+			event_sum = 0
+			for event in sleep_events:
+				event_sum += event.progressRatio
+			total_score += event_sum / len(sleep_events)
+			event_types_considered += 1
+		
+		averaged_score = 0
+		if event_types_considered > 0:
+			averaged_score = round(total_score / event_types_considered, 2)
+		
+		return JsonResponse({
+			"status": {"success": True, "errorCode": 0},
+			"score": averaged_score,
+		})
+	else:
+		return JsonResponse({"status": {"success": False, "errorCode": request_status}})
+	return JsonResponse({"status": {"success": False, "errorCode": 101}})
+
+def getprevioussleep(request):
+	request_status = RequestChecker.checkRequest(request, session=True, method="GET")
+	if request_status == 0:
+		session_id = request.headers["Session-Id"]
+		session_object = Session.objects.get(sessionUID=session_id)
+		
+		days_considered = 1
+		sleep_duration = 0
+		sleep_events = PlanEvent.objects.filter(userUID=session_object.userUID, type="sleep").order_by("-createdTime")[:days_considered]
+		
+		# Sleep score
+		if len(sleep_events) > 0:
+			sleep_duration = int(sleep_events[0].score)
+		
+		return JsonResponse({
+			"status": {"success": True, "errorCode": 0},
+			"sleepDuration": sleep_duration,
+		})
 	else:
 		return JsonResponse({"status": {"success": False, "errorCode": request_status}})
 	return JsonResponse({"status": {"success": False, "errorCode": 101}})
