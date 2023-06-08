@@ -57,7 +57,7 @@ Returned data:
 0: None, successful
 1: User with email already exists
 ```
-## /users/login [POST]
+### /users/login [POST]
 Attempts to login a user given their credentials
 ```
 Expected data:
@@ -77,7 +77,7 @@ Returned data:
 1: email does not exist
 2: password incorrect
 ```
-## /users/logout [GET]
+### /users/logout [GET]
 Attempts to login a user given their credentials
 ```
 Expected data: NONE
@@ -86,7 +86,7 @@ Returned data:
 	status: {success: True, errorCode: 0}
 }
 ```
-## /users/logevents [POST]
+### /users/logevents [POST]
 Attempts to log a health event for a user. This event should only be called internally
 ```
 Expected data: {
@@ -103,14 +103,13 @@ Returned data:
 	status: {success: True, errorCode: 0}
 }
 ```
-## /users/getevents [GET]
-Attempts to get health events for a specific user. This event should only be called internally
+### /users/getevents [GET]
+Attempts to get health events for a specific user.
 ```
 Expected data: {
 	userUID: "aaa",
 	typeName: "HKQuantityTypeIdentifierFlightsClimbed",
-	minTimestamp: 0,
-	maxTimestamp: 4
+	eventCount: 30 #Range between 1-100
 }
 Returned data:
 {

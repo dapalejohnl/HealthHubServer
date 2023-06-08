@@ -133,18 +133,11 @@ def getevents(request):
 	request_status = RequestChecker.checkRequest(request, session=False, method="GET")
 	if request_status == 0:
 		data = json.loads(request.body.decode("utf-8"))
-		if data.get("userUID") and data.get("typeName"):
-			min_timestamp_str = data.get("minTimestamp")
-			max_timestamp_str = data.get("maxTimestamp")
-		
+		if data.get("userUID") and data.get("typeName") and data.get("eventCount"):
 			return_data = []
-			events = None
-			if min_timestamp_str and max_timestamp_str:
-				min_timestamp = int(min_timestamp_str)
-				max_timestamp = int(max_timestamp_str)
-				events = HealthEvent.objects.filter(userUID=data.get("userUID"), type=data.get("typeName"), startTime__range=(min_timestamp, max_timestamp)).order_by("-startTime")
-			else:
-				events = HealthEvent.objects.filter(userUID=data.get("userUID"), type=data.get("typeName")).order_by("-startTime")
+			
+			event_count = int(data.get("eventCount"))
+			events = HealthEvent.objects.filter(userUID=data.get("userUID"), type=data.get("typeName")).order_by("-startTime")[:event_count]
 			for i in range(0, len(events)):
 				event_object = events[i]
 				return_data.append({
