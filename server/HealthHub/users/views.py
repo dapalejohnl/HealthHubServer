@@ -11,6 +11,9 @@ from users.models import User, UserSettings, Session, HealthEvent, PlanEvent
 from helpers.requesthelper import RequestChecker
 from helpers.datahelper import DefaultDataHelper
 
+def clamp(n, min_n, max_n):
+	return max(min(n, max_n), min_n)
+
 def createuser(request):
 	request_status = RequestChecker.checkRequest(request, session=False, method="POST")
 	if request_status == 0:
@@ -81,6 +84,7 @@ def login(request):
 					return JsonResponse({
 						"status": {"success": True, "errorCode": 0},
 						"sessionId": new_session_id,
+						"userId": user_object.uid,
 					})
 				else:
 					return JsonResponse({"status": {"success": False, "errorCode": 2}})
@@ -132,11 +136,11 @@ def logevents(request):
 def getevents(request):
 	request_status = RequestChecker.checkRequest(request, session=False, method="GET")
 	if request_status == 0:
-		data = json.loads(request.body.decode("utf-8"))
+		data = request.GET.dict()
 		if data.get("userUID") and data.get("typeName") and data.get("eventCount"):
 			return_data = []
 			
-			event_count = int(data.get("eventCount"))
+			event_count = clamp(int(data.get("eventCount")), 1, 100)
 			events = HealthEvent.objects.filter(userUID=data.get("userUID"), type=data.get("typeName")).order_by("-startTime")[:event_count]
 			for i in range(0, len(events)):
 				event_object = events[i]
@@ -248,24 +252,34 @@ def getlifescore(request):
 		return JsonResponse({"status": {"success": False, "errorCode": request_status}})
 	return JsonResponse({"status": {"success": False, "errorCode": 101}})
 
-def getprevioussleep(request):
+def getplanscore(request):
 	request_status = RequestChecker.checkRequest(request, session=True, method="GET")
 	if request_status == 0:
-		session_id = request.headers["Session-Id"]
-		session_object = Session.objects.get(sessionUID=session_id)
-		
-		days_considered = 1
-		sleep_duration = 0
-		sleep_events = PlanEvent.objects.filter(userUID=session_object.userUID, type="sleep").order_by("-createdTime")[:days_considered]
-		
-		# Sleep score
-		if len(sleep_events) > 0:
-			sleep_duration = int(sleep_events[0].score)
-		
-		return JsonResponse({
-			"status": {"success": True, "errorCode": 0},
-			"sleepDuration": sleep_duration,
-		})
+		data = request.GET.dict()
+		if data.get("typeName"):
+			session_id = request.headers["Session-Id"]
+			session_object = Session.objects.get(sessionUID=session_id)
+			
+			days_considered = 1
+			score_num = 0
+			score_denom = 0
+			plan_data = {}
+			events = PlanEvent.objects.filter(userUID=session_object.userUID, type=data.get("typeName")).order_by("-createdTime")[:days_considered]
+			
+			if len(events) > 0:
+				plan_event = events[0]
+				score_num = int(plan_event.score)
+				score_denom = int(plan_event.score * plan_event.progressRatio)
+				plan_data = {"name": plan_event.name, "value": int(plan_event.score)}
+			
+			return JsonResponse({
+				"status": {"success": True, "errorCode": 0},
+				"scoreNumerator": score_num,
+				"scoreDenominator": score_denom,
+				"plan": plan_data,
+			})
+		else:
+			return JsonResponse({"status": {"success": False, "errorCode": 105}})
 	else:
 		return JsonResponse({"status": {"success": False, "errorCode": request_status}})
 	return JsonResponse({"status": {"success": False, "errorCode": 101}})

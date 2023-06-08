@@ -12,5 +12,5 @@ urlpatterns = [
 	path("settings/edit", views.editsettings, name="editsettings"),
 	
 	path("getlifescore", views.getlifescore, name="getlifescore"),
-	path("getprevioussleepduration", views.getprevioussleep, name="getprevioussleep"),
+	path("getplanscore", views.getplanscore, name="getplanscore"),
 ]

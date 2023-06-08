@@ -183,14 +183,18 @@ Returned data:
 	score: 0.864
 }
 ```
-### /users/getprevioussleepduration [GET]
-Returns the user's previous sleep duration based on their selected plan
+### /users/getplanscore [GET]
+Returns the user's previous selected plan and its display score
 ```
-Expected data: NONE
+Expected data: {
+	typeName: "exercise" #"exercise", "meal", "sleep"
+}
 Returned data:
 {
-	status: {success: True, errorCode: 0},
-	duration: 18000
+	status = {}
+	scoreNumerator = 114,
+	scoreDenominator = 2000,
+	plan = {name = "swimming", value = 114},
 }
 ```
 
