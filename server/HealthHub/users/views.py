@@ -164,15 +164,19 @@ def getsettings(request):
 		session_id = request.headers["Session-Id"]
 		session_object = Session.objects.get(sessionUID=session_id)
 		settings_object = UserSettings.objects.get(userUID=session_object.userUID)
+		user_object = User.objects.get(uid=session_object.userUID)
 		
 		return JsonResponse({
 			"status": {"success": True, "errorCode": 0},
+			"data": {
+				"email": user_object.email,
+			},
 			"settings": {
 				"sex": settings_object.sex,
 				"weight": settings_object.weight,
 				"height": settings_object.height,
 				"allowedExercises": settings_object.exercises,
-			}
+			},
 		})
 	else:
 		return JsonResponse({"status": {"success": False, "errorCode": request_status}})

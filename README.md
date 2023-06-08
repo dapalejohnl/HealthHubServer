@@ -129,6 +129,9 @@ Expected data: NONE
 Returned data:
 {
 	status: {success: True, errorCode: 0},
+	data: {
+		email: "test@uci.edu",
+	}
 	settings: {
 		sex: "f",
 		weight: 58.4,

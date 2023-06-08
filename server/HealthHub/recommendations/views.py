@@ -57,7 +57,7 @@ def chooseplan(request):
 				userUID = session_object.userUID,
 				createdTime = timezone.now().timestamp(),
 				type = data.get("planName"),
-				name = data.get("chosenPlan").name,
+				name = data.get("chosenPlan").get("name"),
 				progressRatio = score_ratio,
 				score = point_value
 			)
