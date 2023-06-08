@@ -104,18 +104,11 @@ class HealthScores():
 					for event in energy_burned_events:
 						new_avg_score += event.value
 					avg_exercise_score = new_avg_score / len(energy_burned_events)
-				
 			return int(clamp(avg_exercise_score, 100, 2500) * goal_multiplier)
 		elif plan_type == "meal":
-			# do more stuff in here for context
-			
-			
-			
 			return int(clamp(avg_meal_score, 100, 2500) * goal_multiplier)
 		elif plan_type == "sleep":
-			# do more stuff in here for context
-			
-			
+			#min = 4 hours, max = 14 hours
 			return int(clamp(avg_sleep_score, 14400, 50400) * goal_multiplier)
 		return 0
 
