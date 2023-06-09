@@ -90,20 +90,6 @@ class HealthScores():
 			avg_sleep_score = event_sum / len(sleep_events)
 				
 		if plan_type == "exercise":
-			if avg_exercise_score <= 50:
-				# Use previous energy burned data to get a better understanding of a newer user
-				# Only pull data that may show actual calories being burned
-				energy_burned_events = HealthEvent.objects.filter(
-					userUID=user_uid, 
-					type="HKQuantityTypeIdentifierActiveEnergyBurned",
-					value__gte=5
-				).order_by("-createdTime")[:1000]
-				
-				if len(energy_burned_events) > 0:
-					new_avg_score = 0
-					for event in energy_burned_events:
-						new_avg_score += event.value
-					avg_exercise_score = new_avg_score / len(energy_burned_events)
 			return int(clamp(avg_exercise_score, 100, 2500) * goal_multiplier)
 		elif plan_type == "meal":
 			return int(clamp(avg_meal_score, 100, 2500) * goal_multiplier)
@@ -167,9 +153,7 @@ class HealthScores():
 				score = mins_duration * (met_val * 3.5 * user_weight) / 200
 			else:
 				score = mins_duration * (met_val * 3.5 * user_weight) / 200 * 0.925
-			
-			print(score)
-			
+				
 			return score
 		elif plan.get("type") == "meal":
 			return plan.get("calories")
